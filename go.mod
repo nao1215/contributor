@@ -1,4 +1,4 @@
-module github.com/nao1215/coder
+module github.com/nao1215/contributor
 
 go 1.18
 

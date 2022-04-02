@@ -21,10 +21,10 @@ type authorInfo struct {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "coder",
+	Use:   "contributor",
 	Short: "output the ranking table of people who wrote a lot of code (only support git)",
 	Run: func(cmd *cobra.Command, args []string) {
-		os.Exit(coder(cmd, args))
+		os.Exit(contributor(cmd, args))
 	},
 }
 
@@ -40,20 +40,20 @@ func Execute() {
 	}
 }
 
-func coder(cmd *cobra.Command, args []string) int {
+func contributor(cmd *cobra.Command, args []string) int {
 	if !canUseGitCommand() {
-		fmt.Fprint(os.Stderr, "coder: this system does not install git command.")
+		fmt.Fprint(os.Stderr, "contributor: this system does not install git command.")
 		return 1
 	}
 
 	if err := cdGitRootDir(); err != nil {
-		fmt.Fprint(os.Stderr, "coder: can not change current directory. are you in the .git project?")
+		fmt.Fprint(os.Stderr, "contributor: can not change current directory. are you in the .git project?")
 		return 1
 	}
 
 	authors, err := authorsInfo()
 	if err != nil {
-		fmt.Fprint(os.Stderr, "coder: can not get authors information")
+		fmt.Fprint(os.Stderr, "contributor: can not get authors information")
 		return 1
 	}
 	printTable(authors)
@@ -113,7 +113,7 @@ func authorsInfo() ([]authorInfo, error) {
 	authorInfos := []authorInfo{}
 	authors, err := getAuthorsAlphabeticalOrder()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "coder: %s\n", err.Error())
+		fmt.Fprintf(os.Stderr, "contributor: %s\n", err.Error())
 		return nil, err
 	}
 
@@ -135,7 +135,7 @@ func authorsInfo() ([]authorInfo, error) {
 		if err != nil {
 			out, err = exec.Command("git", "log", "--author=\""+v.mail+"\"", "--numstat", "--pretty=", "--no-merges", "master").Output()
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "coder: %s\n", err.Error())
+				fmt.Fprintf(os.Stderr, "contributor: %s\n", err.Error())
 				return nil, err
 			}
 		}
@@ -193,7 +193,7 @@ func sortInOrderOfMostCodesWritten(a []authorInfo) []authorInfo {
 func atoi(s string) (int, error) {
 	i, err := strconv.Atoi(s)
 	if err != nil {
-		fmt.Fprint(os.Stderr, "coder: can not convert line from string to integer")
+		fmt.Fprint(os.Stderr, "contributor: can not convert line from string to integer")
 		return 0, err
 	}
 	return i, nil

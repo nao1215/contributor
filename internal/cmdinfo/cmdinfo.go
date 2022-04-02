@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	name    = "coder"
+	name    = "contributor"
 	version = "1.0.0"
 )
 

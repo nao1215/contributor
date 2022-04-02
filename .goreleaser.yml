@@ -1,4 +1,4 @@
-project_name: coder
+project_name: contributor
 env:
   - GO111MODULE=on
 before:
@@ -35,4 +35,4 @@ changelog:
   filters:
     exclude:
       - "^docs:"
-      - "^test:"	
+      - "^test:"

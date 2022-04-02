@@ -1,2 +1,2 @@
-# coder
-coder - output the ranking table of people who wrote a lot of code (only support git)
+# contributor
+contributor - output the ranking table of people who wrote a lot of code (only support git)
