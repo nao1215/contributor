@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -138,15 +139,18 @@ func authorsInfo() ([]authorInfo, error) {
 		authorInfos = append(authorInfos, a)
 	}
 
+	defalutBranch, err := defaultBranch()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "contributor: %s\n", err.Error())
+		return nil, err
+	}
+
 	result := []authorInfo{}
 	for _, v := range authorInfos {
-		out, err := exec.Command("git", "log", "--author="+v.mail, "--numstat", "--pretty=", "--no-merges", "main").Output()
+		out, err := exec.Command("git", "log", "--author="+v.mail, "--numstat", "--pretty=", "--no-merges", defalutBranch).Output()
 		if err != nil {
-			out, err = exec.Command("git", "log", "--author=\""+v.mail+"\"", "--numstat", "--pretty=", "--no-merges", "master").Output()
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "contributor: %s\n", err.Error())
-				return nil, err
-			}
+			fmt.Fprintf(os.Stderr, "contributor: %s\n", err.Error())
+			return nil, err
 		}
 
 		list := strings.Split(string(out), "\n")
@@ -169,6 +173,23 @@ func authorsInfo() ([]authorInfo, error) {
 		result = append(result, v)
 	}
 	return sortInOrderOfMostCodesWritten(result), nil
+}
+
+func defaultBranch() (string, error) {
+	out, err := exec.Command("git", "remote", "show", "origin").Output()
+	if err != nil {
+		return "", errors.New("can not get default branch name")
+	}
+
+	list := strings.Split(string(out), "\n")
+	for _, v := range list {
+		v = strings.TrimSpace(v)
+		if strings.Contains(v, "HEAD branch:") {
+			v = strings.TrimLeft(v, "HEAD branch:")
+			return strings.TrimSpace(v), nil
+		}
+	}
+	return "", errors.New("can not get default branch name")
 }
 
 func sortInOrderOfMostCodesWritten(a []authorInfo) []authorInfo {
