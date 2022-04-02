@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"reflect"
 	"regexp"
 	"sort"
 	"strconv"
@@ -61,16 +62,23 @@ func contributor(cmd *cobra.Command, args []string) int {
 }
 
 func printTable(author []authorInfo) {
-	data := [][]string{}
+	tableData := [][]string{}
+	names := []string{}
+	emails := []string{}
 	for _, a := range author {
-		data = append(data, []string{a.name, a.mail, strconv.Itoa(a.addLine), strconv.Itoa(a.deleteLine)})
+		if contains(names, a.name) || contains(emails, a.mail) {
+			continue
+		}
+		tableData = append(tableData, []string{a.name, a.mail, strconv.Itoa(a.addLine), strconv.Itoa(a.deleteLine)})
+		names = append(names, a.name)
+		emails = append(emails, a.mail)
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Name", "Email", "+(append)", "-(delete)"})
 	table.SetAutoWrapText(false)
 
-	for _, v := range data {
+	for _, v := range tableData {
 		table.Append(v)
 	}
 	table.Render()
@@ -217,4 +225,23 @@ func removeDuplicate(list []string) []string {
 		}
 	}
 	return results
+}
+
+// contains returns whether the specified data is contained in the slice.
+func contains(slice interface{}, elem interface{}) bool {
+	rvList := reflect.ValueOf(slice)
+
+	if rvList.Kind() == reflect.Slice {
+		for i := 0; i < rvList.Len(); i++ {
+			item := rvList.Index(i).Interface()
+			if !reflect.TypeOf(elem).ConvertibleTo(reflect.TypeOf(item)) {
+				continue
+			}
+			target := reflect.ValueOf(elem).Convert(reflect.TypeOf(item)).Interface()
+			if ok := reflect.DeepEqual(item, target); ok {
+				return true
+			}
+		}
+	}
+	return false
 }
