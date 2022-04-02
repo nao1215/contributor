@@ -42,18 +42,18 @@ func Execute() {
 
 func contributor(cmd *cobra.Command, args []string) int {
 	if !canUseGitCommand() {
-		fmt.Fprint(os.Stderr, "contributor: this system does not install git command.")
+		fmt.Fprintln(os.Stderr, "contributor: this system does not install git command.")
 		return 1
 	}
 
 	if err := cdGitRootDir(); err != nil {
-		fmt.Fprint(os.Stderr, "contributor: can not change current directory. are you in the .git project?")
+		fmt.Fprintln(os.Stderr, "contributor: can not change current directory. are you in the .git project?")
 		return 1
 	}
 
 	authors, err := authorsInfo()
 	if err != nil {
-		fmt.Fprint(os.Stderr, "contributor: can not get authors information")
+		fmt.Fprintln(os.Stderr, "contributor: can not get authors information")
 		return 1
 	}
 	printTable(authors)
@@ -193,7 +193,7 @@ func sortInOrderOfMostCodesWritten(a []authorInfo) []authorInfo {
 func atoi(s string) (int, error) {
 	i, err := strconv.Atoi(s)
 	if err != nil {
-		fmt.Fprint(os.Stderr, "contributor: can not convert line from string to integer")
+		fmt.Fprintln(os.Stderr, "contributor: can not convert line from string to integer")
 		return 0, err
 	}
 	return i, nil
