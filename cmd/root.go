@@ -130,6 +130,7 @@ func authorsInfo() ([]authorInfo, error) {
 		authorInfos = append(authorInfos, a)
 	}
 
+	result := []authorInfo{}
 	for _, v := range authorInfos {
 		out, err := exec.Command("git", "log", "--author="+v.mail, "--numstat", "--pretty=", "--no-merges", "main").Output()
 		if err != nil {
@@ -153,12 +154,13 @@ func authorsInfo() ([]authorInfo, error) {
 				if err != nil {
 					return nil, err
 				}
-				v.addLine += add
-				v.deleteLine += delete
+				v.addLine = v.addLine + add
+				v.deleteLine = v.deleteLine + delete
 			}
 		}
+		result = append(result, v)
 	}
-	return sortInOrderOfMostCodesWritten(authorInfos), nil
+	return sortInOrderOfMostCodesWritten(result), nil
 }
 
 func sortInOrderOfMostCodesWritten(a []authorInfo) []authorInfo {
@@ -187,10 +189,15 @@ func sortInOrderOfMostCodesWritten(a []authorInfo) []authorInfo {
 	for _, kv := range ss {
 		result = append(result, kv.Key)
 	}
+
 	return result
 }
 
 func atoi(s string) (int, error) {
+	if s == "-" {
+		return 0, nil // this case is binary upload.
+	}
+
 	i, err := strconv.Atoi(s)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "contributor: can not convert line from string to integer")
