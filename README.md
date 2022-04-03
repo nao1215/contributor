@@ -3,8 +3,8 @@
 [![reviewdog](https://github.com/nao1215/contributor/actions/workflows/reviewdog.yml/badge.svg)](https://github.com/nao1215/contributor/actions/workflows/reviewdog.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/nao1215/contributor)](https://goreportcard.com/report/github.com/nao1215/contributor)
 ![GitHub](https://img.shields.io/github/license/nao1215/contributor)  
-# contributor - print contributor List (only support git)
-contributor command print list of people who have modified code or documentation in the git project.
+# contributor - print contributor List (only supports git)
+contributor command will print the list of people who have modified code or documentation in a git project.
 
 ```
 $ cd <PROJECT_ROOT_DIR>
@@ -28,9 +28,9 @@ $ contributor
 
 # How to install
 ### Step.1 Install golang
-contributor command only supports installation with `$ go install`. If you does not have the golang development environment installed on your system, please install golang from the [golang official website](https://go.dev/doc/install).
+contributor command only supports installation with `$ go install`. If you do not have golang development environment installed on your system, please install golang from the [golang official website](https://go.dev/doc/install).
 
-### Step2. Install contributor
+### Step.2 Install contributor
 ```
 $ go install github.com/nao1215/contributor@latest
 ```
