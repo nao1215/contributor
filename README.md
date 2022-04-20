@@ -47,6 +47,41 @@ $ contributor --markdown
 | dependabot-preview[bot] | 27856297+dependabot-preview[bot]@users.noreply.github.com |         0 |         0 |
 ```
 
+# Auto-generate Contributors.md in GitHub Actions
+If you want to automatically create Contributors.md in GitHub Actions, put .github/workflows/contributor.yml in your project.
+```.github/workflows/contributor.yml
+name: Contributors
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  contributors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.18"
+
+      - name: Generate Contributors
+        run: |
+          go install github.com/nao1215/contributor@latest
+          git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          contributor --file
+          git add .; \
+          git commit -m "Update Contributors List"; \
+          git push origin HEAD:${GITHUB_REF};
+```
 # Contributing
 First off, thanks for taking the time to contribute! ❤️
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information.  
