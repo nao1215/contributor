@@ -10,7 +10,9 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/nao1215/contributor/internal/completion"
 	"github.com/nao1215/contributor/internal/print"
 	"github.com/olekukonko/tablewriter"
@@ -44,12 +46,19 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().BoolP("markdown", "m", false, "Change output format to markdown")
+	rootCmd.Flags().BoolP("file", "f", false, "Generate Contributors.md file")
 }
 
 func contributor(cmd *cobra.Command, args []string) int {
-	markdown, err := cmd.Flags().GetBool("markdown")
+	markdownFlag, err := cmd.Flags().GetBool("markdown")
 	if err != nil {
 		print.Err("can not parse command line argument (--markdown)")
+		return 1
+	}
+
+	fileFlag, err := cmd.Flags().GetBool("file")
+	if err != nil {
+		print.Err("can not parse command line argument (--file)")
 		return 1
 	}
 
@@ -63,16 +72,35 @@ func contributor(cmd *cobra.Command, args []string) int {
 		return 1
 	}
 
+	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond) // Build our new spinner
+	s.Start()
 	authors, err := authorsInfo()
 	if err != nil {
 		print.Err("can not get authors information")
 		return 1
 	}
-	printTable(authors, markdown)
+	s.Stop()
+
+	if fileFlag {
+		f, err := os.OpenFile("Contributors.md", os.O_RDWR|os.O_CREATE, 0664)
+		if err != nil {
+			print.Err(err)
+			return 1
+		}
+		printTable(f, authors, true)
+
+		if err := f.Close(); err != nil {
+			print.Err(err)
+			return 1
+		}
+		print.Info("Generate Contributors.md")
+	} else {
+		printTable(os.Stdout, authors, markdownFlag)
+	}
 	return 0
 }
 
-func printTable(author []authorInfo, markdown bool) {
+func printTable(out *os.File, author []authorInfo, markdown bool) {
 	tableData := [][]string{}
 	names := []string{}
 	emails := []string{}
@@ -85,7 +113,7 @@ func printTable(author []authorInfo, markdown bool) {
 		emails = append(emails, a.mail)
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
+	table := tablewriter.NewWriter(out)
 	table.SetHeader([]string{"Name", "Email", "+(append)", "-(delete)"})
 	table.SetAutoWrapText(false)
 	if markdown {
