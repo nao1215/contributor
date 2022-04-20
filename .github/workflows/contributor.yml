@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        depth: 0
 
       - name: Set up Go
         uses: actions/setup-go@v2
@@ -24,8 +25,6 @@ jobs:
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           contributor --file
-          contributor
-          contributor --markdown
           git add .; \
           git commit -m "Update Contributors List"; \
           git push origin HEAD:${GITHUB_REF};
