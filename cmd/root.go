@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/nao1215/contributor/internal/completion"
+	"github.com/nao1215/contributor/internal/print"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
@@ -31,35 +32,30 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-func exitError(msg interface{}) {
-	fmt.Fprintln(os.Stderr, msg)
-	os.Exit(1)
-}
-
 // Execute start command.
 func Execute() {
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	completion.DeployShellCompletionFileIfNeeded(rootCmd)
 
 	if err := rootCmd.Execute(); err != nil {
-		exitError(err)
+		print.Fatal(err)
 	}
 }
 
 func contributor(cmd *cobra.Command, args []string) int {
 	if !canUseGitCommand() {
-		fmt.Fprintln(os.Stderr, "contributor: this system does not install git command.")
+		print.Err(":this system does not install git command.")
 		return 1
 	}
 
 	if err := cdGitRootDir(); err != nil {
-		fmt.Fprintln(os.Stderr, "contributor: can not change current directory. are you in the .git project?")
+		print.Err("can not change current directory. are you in the .git project?")
 		return 1
 	}
 
 	authors, err := authorsInfo()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "contributor: can not get authors information")
+		print.Err("can not get authors information")
 		return 1
 	}
 	printTable(authors)
@@ -126,7 +122,7 @@ func authorsInfo() ([]authorInfo, error) {
 	authorInfos := []authorInfo{}
 	authors, err := getAuthorsAlphabeticalOrder()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "contributor: %s\n", err.Error())
+		print.Err(err)
 		return nil, err
 	}
 
