@@ -5,7 +5,6 @@ go 1.18
 require (
 	github.com/fatih/color v1.13.0
 	github.com/mattn/go-colorable v0.1.12
-	github.com/nao1215/mkgoprj/v2 v2.0.1
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/spf13/cobra v1.4.0
 )
