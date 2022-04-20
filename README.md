@@ -34,6 +34,19 @@ contributor command only supports installation with `$ go install`. If you do no
 ```
 $ go install github.com/nao1215/contributor@latest
 ```
+
+# Generate Contributors.md
+The --file option generates Contributors.md in Markdown format.
+```
+$ contributor --markdown 
+|          NAME           |                           EMAIL                           | +(APPEND) | -(DELETE) |
+|-------------------------|-----------------------------------------------------------|-----------|-----------|
+| Ichinose Shogo          | shogo82148@gmail.com                                      |      5642 |      1074 |
+| Tatsuro Furusawa        | fur.sax.smallworld@gmail.com                              |        14 |         4 |
+| Shoma Okamoto           | 32533860+shmokmt@users.noreply.github.com                 |         1 |         1 |
+| dependabot-preview[bot] | 27856297+dependabot-preview[bot]@users.noreply.github.com |         0 |         0 |
+```
+
 # Contributing
 First off, thanks for taking the time to contribute! ❤️
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information.  
