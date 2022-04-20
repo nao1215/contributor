@@ -42,9 +42,19 @@ func Execute() {
 	}
 }
 
+func init() {
+	rootCmd.Flags().BoolP("markdown", "m", false, "Change output format to markdown")
+}
+
 func contributor(cmd *cobra.Command, args []string) int {
+	markdown, err := cmd.Flags().GetBool("markdown")
+	if err != nil {
+		print.Err("can not parse command line argument (--markdown)")
+		return 1
+	}
+
 	if !canUseGitCommand() {
-		print.Err(":this system does not install git command.")
+		print.Err("this system does not install git command.")
 		return 1
 	}
 
@@ -58,11 +68,11 @@ func contributor(cmd *cobra.Command, args []string) int {
 		print.Err("can not get authors information")
 		return 1
 	}
-	printTable(authors)
+	printTable(authors, markdown)
 	return 0
 }
 
-func printTable(author []authorInfo) {
+func printTable(author []authorInfo, markdown bool) {
 	tableData := [][]string{}
 	names := []string{}
 	emails := []string{}
@@ -78,6 +88,10 @@ func printTable(author []authorInfo) {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Name", "Email", "+(append)", "-(delete)"})
 	table.SetAutoWrapText(false)
+	if markdown {
+		table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+		table.SetCenterSeparator("|")
+	}
 
 	for _, v := range tableData {
 		table.Append(v)
