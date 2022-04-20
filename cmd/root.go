@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/nao1215/contributor/internal/completion"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
@@ -37,6 +38,9 @@ func exitError(msg interface{}) {
 
 // Execute start command.
 func Execute() {
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
+	completion.DeployShellCompletionFileIfNeeded(rootCmd)
+
 	if err := rootCmd.Execute(); err != nil {
 		exitError(err)
 	}
