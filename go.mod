@@ -3,7 +3,6 @@ module github.com/nao1215/contributor
 go 1.18
 
 require (
-	github.com/briandowns/spinner v1.18.1
 	github.com/fatih/color v1.13.0
 	github.com/mattn/go-colorable v0.1.12
 	github.com/olekukonko/tablewriter v0.0.5

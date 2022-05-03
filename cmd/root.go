@@ -10,9 +10,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"time"
 
-	"github.com/briandowns/spinner"
 	"github.com/nao1215/contributor/internal/completion"
 	"github.com/nao1215/contributor/internal/print"
 	"github.com/olekukonko/tablewriter"
@@ -72,14 +70,12 @@ func contributor(cmd *cobra.Command, args []string) int {
 		return 1
 	}
 
-	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond) // Build our new spinner
-	s.Start()
+	print.Info("collect contributor information from git-logs")
 	authors, err := authorsInfo()
 	if err != nil {
 		print.Err("can not get authors information")
 		return 1
 	}
-	s.Stop()
 
 	if fileFlag {
 		f, err := os.OpenFile("Contributors.md", os.O_RDWR|os.O_CREATE, 0664)
