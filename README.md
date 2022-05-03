@@ -4,7 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/nao1215/contributor)](https://goreportcard.com/report/github.com/nao1215/contributor)
 ![GitHub](https://img.shields.io/github/license/nao1215/contributor)  
 # contributor - print contributor List (only supports git)
-contributor command will print the list of people who have modified code or documentation in a git project.
+contributor command will print the list of people who have modified code or documentation in a git project. [The release page](https://github.com/nao1215/contributor/releases) contains packages in .deb, .rpm, and .apk formats.  
 
 ```
 $ cd <PROJECT_ROOT_DIR>

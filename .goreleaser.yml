@@ -36,3 +36,12 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+nfpms:
+  - maintainer: Naohiro CHIKAMATSU <n.chika156@gmail.com>
+    description: contributor - print contributor List (only supports git)
+    homepage: https://github.com/nao1215/contributor
+    license: MIT
+    formats:
+      - deb
+      - rpm
+      - apk
