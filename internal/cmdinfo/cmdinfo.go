@@ -6,7 +6,7 @@ import (
 
 const (
 	name    = "contributor"
-	version = "1.1.0"
+	version = "1.1.1"
 )
 
 // Version return command version.
