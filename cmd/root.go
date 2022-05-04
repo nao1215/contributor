@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"os/exec"
 	"reflect"
@@ -179,7 +178,7 @@ func authorsInfo() ([]authorInfo, error) {
 
 	defalutBranch, err := defaultBranch()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "contributor: %s\n", err.Error())
+		print.Err(err)
 		return nil, err
 	}
 
@@ -187,7 +186,7 @@ func authorsInfo() ([]authorInfo, error) {
 	for _, v := range authorInfos {
 		out, err := exec.Command("git", "log", "--author="+v.mail, "--numstat", "--pretty=", "--no-merges", defalutBranch).Output()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "contributor: %s\n", err.Error())
+			print.Err(err)
 			return nil, err
 		}
 
@@ -198,10 +197,12 @@ func authorsInfo() ([]authorInfo, error) {
 			if len(list) == 3 {
 				add, err := atoi(list[0])
 				if err != nil {
+					print.Err(err)
 					return nil, err
 				}
 				delete, err := atoi(list[1])
 				if err != nil {
+					print.Err(err)
 					return nil, err
 				}
 				v.addLine = v.addLine + add
@@ -267,7 +268,7 @@ func atoi(s string) (int, error) {
 
 	i, err := strconv.Atoi(s)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "contributor: can not convert line from string to integer")
+		print.Err("can not convert line from string to integer")
 		return 0, err
 	}
 	return i, nil
