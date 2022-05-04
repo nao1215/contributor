@@ -132,6 +132,7 @@ func canUseGitCommand() bool {
 func cdGitRootDir() error {
 	out, err := exec.Command("git", "rev-parse", "--show-toplevel").Output()
 	if err != nil {
+		print.Err(string(out))
 		return err
 	}
 	return os.Chdir(strings.Split(string(out), "\n")[0])
@@ -146,6 +147,7 @@ func exists(path string) bool {
 func getAuthorsAlphabeticalOrder() ([]string, error) {
 	out, err := exec.Command("git", "log", "--pretty=format:%an<%ae>").Output()
 	if err != nil {
+		print.Err(string(out))
 		return nil, err
 	}
 
@@ -186,6 +188,7 @@ func authorsInfo() ([]authorInfo, error) {
 	for _, v := range authorInfos {
 		out, err := exec.Command("git", "log", "--author="+v.mail, "--numstat", "--pretty=", "--no-merges", defalutBranch).Output()
 		if err != nil {
+			print.Err(string(out))
 			print.Err(err)
 			return nil, err
 		}
@@ -217,6 +220,7 @@ func authorsInfo() ([]authorInfo, error) {
 func defaultBranch() (string, error) {
 	out, err := exec.Command("git", "remote", "show", "origin").Output()
 	if err != nil {
+		print.Err(string(out))
 		return "", errors.New("can not get default branch name")
 	}
 
